@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tara ML 😈🎮</title>
+
+<link rel="manifest" href="manifest.json">
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  font-family: 'Segoe UI', sans-serif;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.phone {
+  width: 320px;
+  background: #111;
+  border-radius: 30px;
+  padding: 22px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+  position: relative;
+}
+
+h1 {
+  margin-bottom: 10px;
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 15px;
+  border: none;
+  margin-bottom: 12px;
+}
+
+.msg {
+  font-size: 14px;
+  margin-bottom: 20px;
+  min-height: 60px;
+}
+
+.buttons {
+  position: relative;
+  height: 140px;
+}
+
+button {
+  padding: 12px 22px;
+  border-radius: 25px;
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+#g {
+  background: #00ff9c;
+  font-weight: bold;
+}
+
+#no {
+  background: #ff5959;
+  color: white;
+  position: absolute;
+  left: 50%;
+  top: 70px;
+  transform: translateX(-50%);
+}
+
+.win {
+  display: none;
+  animation: pop .4s ease;
+}
+
+@keyframes pop {
+  from { transform: scale(.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.bar-wrap {
+  background:#333;
+  border-radius:10px;
+  overflow:hidden;
+  margin-top:10px;
+}
+
+.bar {
+  height:12px;
+  width:0%;
+  background:#00ff9c;
+  transition:.4s;
+}
+</style>
+</head>
+
+<body>
+
+<div class="phone">
+
+<h1>🎮 Tara ML?</h1>
+
+<select id="rank" onchange="updateMsg()">
+  <option>Warrior</option>
+  <option>Elite</option>
+  <option>Master</option>
+  <option>Grandmaster</option>
+  <option>Epic</option>
+  <option>Legend</option>
+  <option>Mythic</option>
+</select>
+
+<div class="msg" id="msg"></div>
+
+<div class="buttons" id="buttons">
+  <button id="g" onclick="yes()">G 🔥</button>
+  <button id="no" onclick="moveNo()" onmouseover="moveNo()">Ayoko 😤</button>
+</div>
+
+<!-- FAKE DRAFT -->
+<div class="win" id="draft">
+  <h2>🎮 Draft Phase</h2>
+  <p id="draftText">Connecting to server…</p>
+
+  <div class="bar-wrap">
+    <div class="bar" id="bar"></div>
+  </div>
+
+  <p id="pickText" style="margin-top:12px;font-size:13px;"></p>
+</div>
+
+</div>
+
+<script>
+// ===== PWA =====
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js');
+}
+
+// ===== DATA =====
+let count = 0;
+
+const rankMsg = {
+  Warrior: "Easy lang ‘to 😌",
+  Elite: "Chill game lang 😏",
+  Master: "Focus ka ah 😈",
+  Grandmaster: "Walang clown 🤡",
+  Epic: "Draft pa lang panalo na 😎",
+  Legend: "Clean macro please 😤",
+  Mythic: "MMR game ‘to 🔥"
+};
+
+const annoy = [
+  "Ayoko 😤",
+  "Sure ka?",
+  "Isa lang 😭",
+  "Mythic ka naman 😈",
+  "G na kasi 😂"
+];
+
+const heroes = [
+  "Alucard","Ling","Angela",
+  "Gusion","Franco","Xavier","Layla"
+];
+
+// ===== INIT =====
+function updateMsg(){
+  const r = rank.value;
+  msg.innerText = `Rank mo: ${r}\n${rankMsg[r]}`;
+}
+updateMsg();
+
+// ===== NO BUTTON =====
+function moveNo(){
+  count++;
+  no.style.left = Math.random()*220 + "px";
+  no.style.top  = Math.random()*90 + "px";
+  no.innerText = annoy[count % annoy.length];
+  no.style.transform = `scale(${1 - count*0.05})`;
+}
+
+// ===== YES FLOW =====
+function yes(){
+  buttons.style.display = "none";
+  msg.style.display = "none";
+  draft.style.display = "block";
+
+  let p = 0;
+  const steps = setInterval(()=>{
+    p += 20;
+    bar.style.width = p + "%";
+
+    if(p===20) draftText.innerText = "Match found…";
+    if(p===40) pickText.innerText =
+      "Enemy picked: " + heroes[Math.floor(Math.random()*heroes.length)];
+    if(p===60) pickText.innerText =
+      "Ally picked: " + heroes[Math.floor(Math.random()*heroes.length)];
+    if(p===80) draftText.innerText = "Waiting for last player…";
+
+    if(p>=100){
+      clearInterval(steps);
+      draftText.innerText = "Entering the battlefield…";
+
+      // 🔥 AUTO OPEN ML
+      window.location.href =
+        "intent://#Intent;package=com.mobile.legends;scheme=market;end";
+
+      // fallback
+      setTimeout(()=>{
+        window.location.href =
+          "https://play.google.com/store/apps/details?id=com.mobile.legends";
+      },1200);
+    }
+  },700);
+}
+</script>
+
+</body>
+</html>
